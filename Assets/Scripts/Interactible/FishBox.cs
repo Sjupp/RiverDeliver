@@ -7,22 +7,37 @@ public class FishBox : BaseInteractible
     public GameObject[] fishMaterials;
     public BaseInteractionComponent interactionComponent;
     public GameObject fill;
+    public FishBoxSpawner spawner;
 
     [Range(0, 10)]
-    public int fishQuantity = 0;
-    public int fishQuantityLimit = 10;
-    public bool fishBoxIsFull;
+    public int fishQuantity;
+    public int fishQuantityLimit;
+    public bool isFull;
+    public bool isInSpawn = true;
 
     private readonly float min = -0.01f, max = 0.61f;
 
-    public void Start()
+    //Debug
+    //public void Start()
+    //{
+    //    fishQuantity = Random.Range(0, 11);
+    //    UpdateBoxStatus();
+    //}
+    private void Start()
     {
-        fishQuantity = Random.Range(0, 11);
-        UpdateBoxStatus();
+        fishQuantity = 0;
+        fishQuantityLimit = 10;
     }
 
     public override void Interaction(Actor thisActor)
     {
+        if (isInSpawn)
+        {
+            spawner.FishBoxHasBeenPickedUp();
+            isInSpawn = false;
+            spawner = null;
+        }
+
         interactionComponent.ReceiveInteraction(thisActor);
     }
 
@@ -34,7 +49,6 @@ public class FishBox : BaseInteractible
             go.GetComponent<MeshRenderer>().material.color = Color.blue;
         }
     }
-    
 
     public void AddFish()
     {
@@ -43,7 +57,7 @@ public class FishBox : BaseInteractible
             fishQuantity++;
             UpdateBoxStatus();
             if (fishQuantity == fishQuantityLimit)
-                fishBoxIsFull = true;
+                isFull = true;
         }
     }
 
@@ -51,7 +65,7 @@ public class FishBox : BaseInteractible
     {
         fishQuantity = fishQuantityLimit;
         UpdateBoxStatus();
-        fishBoxIsFull = true;
+        isFull = true;
     }
 
     private void UpdateBoxStatus()

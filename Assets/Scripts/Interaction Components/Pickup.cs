@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Pickup : BaseInteractionComponent
 {
-    public bool isBeingCarried = false;
     public bool canBeStored = true;
-    public bool isStored = false;
+    private bool isBeingCarried = false;
+    private bool isStored = false;
     private Player player = null;
 
     public override void ReceiveInteraction(Actor thisActor)
