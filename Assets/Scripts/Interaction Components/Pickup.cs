@@ -6,12 +6,12 @@ public class Pickup : BaseInteractionComponent
 {
     public bool isBeingCarried = false;
     public bool canBeStored = true;
-    public bool isBeingStored = false;
+    public bool isStored = false;
     private Player player = null;
 
     public override void ReceiveInteraction(Actor thisActor)
     {
-        if (!isBeingCarried && !isBeingStored)
+        if (!isBeingCarried && !isStored)
         {
             player = thisActor as Player; //TODO: Probably remove Actor base class b/c superfluous.
             transform.SetParent(player.holdPoint, true);
@@ -19,7 +19,7 @@ public class Pickup : BaseInteractionComponent
             isBeingCarried = true;
             player.carryingSomething = true;
         }
-        else
+        else if (isBeingCarried && player.carryingSomething)
         {
             Drop(thisActor);
         }
@@ -47,8 +47,7 @@ public class Pickup : BaseInteractionComponent
 
             player.carryingSomething = false;
             isBeingCarried = false;
-            isBeingStored = true;
-            
+            isStored = true;
         }
         else
         {
@@ -60,12 +59,9 @@ public class Pickup : BaseInteractionComponent
             transform.SetParent(thisActor.transform.parent, true);
             transform.SetPositionAndRotation(hit.point, temp);
 
-
             player.carryingSomething = false;
             isBeingCarried = false;
         }
-
-
     }
 
     //Stulen från https://forum.unity.com/threads/clean-est-way-to-find-nearest-object-of-many-c.44315/ post #4
