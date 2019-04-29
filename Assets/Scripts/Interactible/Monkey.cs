@@ -6,7 +6,7 @@ public class Monkey : BaseInteractible
 {
     public BaseInteractionComponent interactionComponent;
 
-    public override void Interaction(Actor thisActor)
+    public override void Interaction(Player thisActor)
     {
         interactionComponent.ReceiveInteraction(thisActor);
     }

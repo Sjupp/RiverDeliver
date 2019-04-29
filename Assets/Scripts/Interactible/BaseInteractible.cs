@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class BaseInteractible : MonoBehaviour
 {
-    public abstract void Interaction(Actor thisActor);
+    public abstract void Interaction(Player thisPlayer);
 }

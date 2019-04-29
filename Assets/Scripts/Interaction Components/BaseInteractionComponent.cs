@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class BaseInteractionComponent : MonoBehaviour
 {
-    public abstract void ReceiveInteraction(Actor thisActor);
+    public abstract void ReceiveInteraction(Player thisActor);
 }

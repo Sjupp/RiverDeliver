@@ -8,11 +8,16 @@ public class Pickup : BaseInteractionComponent
     private bool isBeingCarried = false;
     private bool isStored = false;
     private Player player = null;
+    private StorageSlot storedLocation = null;
 
-    public override void ReceiveInteraction(Actor thisActor)
+    public override void ReceiveInteraction(Player thisActor)
     {
-        if (!isBeingCarried && !isStored)
+        if (!isBeingCarried)
         {
+            if (isStored)
+            {
+                storedLocation.RemoveFishBox();
+            }
             player = thisActor as Player; //TODO: Probably remove Actor base class b/c superfluous.
             transform.SetParent(player.holdPoint, true);
             transform.localPosition = Vector3.zero;
@@ -25,7 +30,7 @@ public class Pickup : BaseInteractionComponent
         }
     }
 
-    private void Drop(Actor thisActor)
+    private void Drop(Player thisActor)
     {
         bool storageAvailable = false;
         Collider foundCollider = null;
@@ -43,7 +48,9 @@ public class Pickup : BaseInteractionComponent
         if (storageAvailable)
         {
             transform.SetParent(foundCollider.transform, false);
-            foundCollider.GetComponent<StorageSlot>().isTaken = true;
+            var storageSlot = foundCollider.GetComponent<StorageSlot>();
+            storageSlot.AddFishBox(GetComponent<FishBox>());
+            storedLocation = storageSlot;
 
             player.carryingSomething = false;
             isBeingCarried = false;

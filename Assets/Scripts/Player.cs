@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Actor
+public class Player : MonoBehaviour
 {
     internal bool carryingSomething = false;
 
     public Transform boxCollider;
     public Transform holdPoint;
+
+    private Vector3 interactionOverlapSize = new Vector3(1.5f, 2f, 1.5f);
 
     public void Broom()
     {
@@ -25,7 +27,7 @@ public class Player : Actor
 
 
         LayerMask layerMask = LayerMask.GetMask("Interactible");
-        Collider[] foundInteractibles = Physics.OverlapBox(boxCollider.position, new Vector3(1.5f, 2f, 1.5f), Quaternion.identity, layerMask);
+        Collider[] foundInteractibles = Physics.OverlapBox(boxCollider.position, interactionOverlapSize, Quaternion.identity, layerMask);
 
 
         //Implement Priorities Here

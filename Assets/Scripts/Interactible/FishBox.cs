@@ -7,15 +7,12 @@ public class FishBox : BaseInteractible
     public GameObject[] fishMaterials;
     public BaseInteractionComponent interactionComponent;
     public GameObject fill;
-    public FishBoxSpawner spawner;
     public ParticleSystem glitter;
-
 
     [Range(0, 10)]
     public int fishQuantity;
     public int fishQuantityLimit;
     public bool isFull;
-    public bool isInSpawn = true;
 
     private readonly float min = -0.01f, max = 0.61f;
 
@@ -31,15 +28,8 @@ public class FishBox : BaseInteractible
         fishQuantityLimit = 10;
     }
 
-    public override void Interaction(Actor thisActor)
+    public override void Interaction(Player thisActor)
     {
-        if (isInSpawn)
-        {
-            spawner.FishBoxHasBeenPickedUp();
-            isInSpawn = false;
-            spawner = null;
-        }
-
         interactionComponent.ReceiveInteraction(thisActor);
     }
 
