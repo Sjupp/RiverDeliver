@@ -6,6 +6,7 @@ public class BoatMovement : MonoBehaviour
 {
     public bool enableFloatiness = false;
     float incrementalNumber = 0;
+
     void Update()
     {
         incrementalNumber += Time.deltaTime;

@@ -48,10 +48,9 @@ public class InputHandler : MonoBehaviour
 
         if (playerVector.sqrMagnitude > 0.1f)
         {
-            Debug.Log("rot");
             inputAngle = Mathf.Atan2(inputVector.x, inputVector.z) * Mathf.Rad2Deg;
             viewAngle = Mathf.LerpAngle(viewAngle, inputAngle, lerpStrength);
-            rb.rotation = Quaternion.AngleAxis(viewAngle, Vector3.up);
+            playerRef.transform.rotation = Quaternion.AngleAxis(viewAngle, Vector3.up);
         }
 
     }

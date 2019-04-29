@@ -8,6 +8,8 @@ public class FishBox : BaseInteractible
     public BaseInteractionComponent interactionComponent;
     public GameObject fill;
     public FishBoxSpawner spawner;
+    public ParticleSystem glitter;
+
 
     [Range(0, 10)]
     public int fishQuantity;
@@ -54,10 +56,15 @@ public class FishBox : BaseInteractible
     {
         if (fishQuantity < fishQuantityLimit)
         {
-            fishQuantity++;
+            if (Random.Range(0.0f, 1.0f) > 0.10f)
+                fishQuantity++;
+
             UpdateBoxStatus();
             if (fishQuantity == fishQuantityLimit)
+            {
                 isFull = true;
+                glitter.Play();
+            }
         }
     }
 
@@ -65,7 +72,10 @@ public class FishBox : BaseInteractible
     {
         fishQuantity = fishQuantityLimit;
         UpdateBoxStatus();
-        isFull = true;
+        {
+            isFull = true;
+            glitter.Play();
+        }
     }
 
     private void UpdateBoxStatus()
