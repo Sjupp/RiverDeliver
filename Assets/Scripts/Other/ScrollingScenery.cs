@@ -66,10 +66,10 @@ public class ScrollingScenery : MonoBehaviour
             newPos = hit.point - dropAmount;
         }
 
-        GameObject go = FetchFromPool();
-        go.transform.SetPositionAndRotation(newPos, Quaternion.Euler(0, Random.Range(0, 360), 0));
+        GameObject go = FetchFromPool(); // Hämta ett objekt ur poolen
+        go.transform.SetPositionAndRotation(newPos, Quaternion.Euler(0, Random.Range(0, 360), 0)); // Sätt ut den där jag vill att den ska "spawna"
         go.transform.SetParent(transform);
-        go.GetComponent<SceneryObject>().speed = speed;
+        go.GetComponent<SceneryObject>().speed = speed; // Sätt objektet i rörelse. I sin egen kod: När den rört sig x långt, SetActive(false);
     }
 
     public GameObject FetchFromPool()

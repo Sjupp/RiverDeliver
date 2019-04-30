@@ -29,18 +29,18 @@ public class Fisherman : BaseInteractible
     {
 
         if (!storageSlotRef.fishBox.isFull)
-            storageSlotRef.fishBox.AddFish();
+            storageSlotRef.fishBox.ChangeFishValue(1);
             //canFish = false;
     }
 
     public void SucceedWithHelpingEvent()
     {
-        storageSlotRef.fishBox.AddBigFish();
+        storageSlotRef.fishBox.ChangeFishValue(10);
         ExecuteTacticalFishingManeuver();
     }
 
     public override void Interaction(Player thisActor)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Interacted with: " + name);
     }
 }

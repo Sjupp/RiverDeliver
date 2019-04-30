@@ -13,17 +13,14 @@ public class FishBox : BaseInteractible
     public int fishQuantity;
     public int fishQuantityLimit;
     public bool isFull;
+    public bool isEmpty;
 
-    private readonly float min = -0.01f, max = 0.61f;
+    private readonly float min = 0.09f, max = 0.51f;
 
-    //Debug
-    //public void Start()
-    //{
-    //    fishQuantity = Random.Range(0, 11);
-    //    UpdateBoxStatus();
-    //}
     private void Start()
     {
+        isFull = false;
+        isEmpty = true;
         fishQuantity = 0;
         fishQuantityLimit = 10;
     }
@@ -35,43 +32,44 @@ public class FishBox : BaseInteractible
 
     private void SetMaterial()
     {
-        Random.Range(1, 2);
         foreach (GameObject go in fishMaterials)
         {
             go.GetComponent<MeshRenderer>().material.color = Color.blue;
         }
     }
 
-    public void AddFish()
+    public void ChangeFishValue(int amount)
     {
-        if (fishQuantity < fishQuantityLimit)
-        {
-            if (Random.Range(0.0f, 1.0f) > 0.10f)
-                fishQuantity++;
+        var newFishQuantity = fishQuantity + amount;
 
-            UpdateBoxStatus();
-            if (fishQuantity == fishQuantityLimit)
-            {
-                isFull = true;
-                glitter.Play();
-            }
-        }
-    }
-
-    public void AddBigFish()
-    {
-        fishQuantity = fishQuantityLimit;
-        UpdateBoxStatus();
+        if (newFishQuantity >= fishQuantityLimit)
         {
+            fishQuantity = fishQuantityLimit;
             isFull = true;
-            glitter.Play();
         }
+        else if (newFishQuantity <= 0)
+        {
+            fishQuantity = 0;
+            isEmpty = true;
+        }
+        else
+        {
+            fishQuantity = newFishQuantity;
+            isEmpty = false;
+            isFull = false;
+        }
+
+        UpdateBoxVisuals();
     }
 
-    private void UpdateBoxStatus()
+    private void UpdateBoxVisuals()
     {
-        float fillPercentage = (float)fishQuantity / (float)fishQuantityLimit;
+        if (isFull)
+            glitter.Play();
+        else
+            glitter.Stop();
 
+        float fillPercentage = (float)fishQuantity / (float)fishQuantityLimit;
         fill.transform.localPosition = new Vector3(0, min + (max * fillPercentage), 0);
     }
 

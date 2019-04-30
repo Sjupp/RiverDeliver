@@ -17,6 +17,8 @@ public class Pickup : BaseInteractionComponent
             if (isStored)
             {
                 storedLocation.RemoveFishBox();
+                storedLocation = null;
+                isStored = false;
             }
             player = thisActor as Player; //TODO: Probably remove Actor base class b/c superfluous.
             transform.SetParent(player.holdPoint, true);
@@ -60,7 +62,7 @@ public class Pickup : BaseInteractionComponent
         {
             LayerMask layerMask0 = LayerMask.GetMask("Deck");
             // Still haven't figured out how to use these outside of an if-statement
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask0)) ;
+            Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask0);
 
             var temp = transform.rotation;
             transform.SetParent(thisActor.transform.parent, true);
