@@ -13,8 +13,7 @@ public class Player : MonoBehaviour
 
     public void Broom()
     {
-        if (!carryingSomething)
-            Debug.Log("Broom!");
+        if (!carryingSomething) ;
         
         //Raycast
         //If Hit Monkey > Shoo
@@ -23,8 +22,6 @@ public class Player : MonoBehaviour
     
     public void Interact()
     {
-        Debug.Log("Interact!");
-
 
         LayerMask layerMask = LayerMask.GetMask("Interactible");
         Collider[] foundInteractibles = Physics.OverlapBox(boxCollider.position, interactionOverlapSize, Quaternion.identity, layerMask);

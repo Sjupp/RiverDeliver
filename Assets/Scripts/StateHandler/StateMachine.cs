@@ -2,23 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Ursprungligen utformad med hjälp av Daniel och senare Max
 public class StateMachine
 {
-    public State currentState;
-    public Actor actor;
+    public MonkeyState currentState;
+    public MonkeyState newState;
+    public Monkey actor;
 
-
-    public void ChangeState(State newState)
+    public StateMachine(Monkey apa)
     {
-        if (currentState != null)
-            currentState.ExitState(actor);
-        currentState = newState;
-        currentState.EnterState(actor);
+        this.actor = apa;
+        currentState = null;
     }
 
-    public void Update()
+    public void ReceiveMessage(MonkeyState.Messages message)
     {
-        if (currentState != null)
-            currentState.UpdateState(actor);
+        if (currentState == null)
+            return;
+
+        newState = currentState.ReceiveMessage(message);
+        CheckStateChange();
     }
+
+    public void Update(float t)
+    {
+        if (currentState == null)
+            return;
+
+        newState = currentState.UpdateState(t);
+        CheckStateChange();
+
+    }
+
+    public void CheckStateChange()
+    {
+        if (newState != null)
+        {
+            currentState.ExitState();
+            currentState = newState;
+            currentState.EnterState();
+        }
+    }
+
 }

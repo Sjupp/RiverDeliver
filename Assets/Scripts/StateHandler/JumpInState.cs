@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : MonkeyState
+public class JumpInState : MonkeyState
 {
     private Monkey actor;
     private float durationTime;
 
-    public IdleState(Monkey _actor)
+    public JumpInState(Monkey _actor)
     {
         actor = _actor;
         durationTime = 2.0f;
@@ -15,13 +15,12 @@ public class IdleState : MonkeyState
 
     public override void EnterState()
     {
-        Debug.Log("Enter Idle");
-        //Animator Play(JumpIn);
+        Debug.Log("Enter JumpIn");
     }
 
     public override void ExitState()
     {
-        Debug.Log("Exit Idle");
+        Debug.Log("Exit JumpIn");
     }
 
     public override MonkeyState ReceiveMessage(Messages message)

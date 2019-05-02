@@ -2,37 +2,66 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PickupType
+{
+    FishBox, Monkey
+}
+
+// Lord forgive me for I have sinned
 public class Pickup : BaseInteractionComponent
 {
     public bool canBeStored = true;
-    private bool isBeingCarried = false;
-    private bool isStored = false;
-    private Player player = null;
-    private StorageSlot storedLocation = null;
+    public bool isBeingCarried = false;
+    public bool isStored = false;
+    public StorageSlot storedLocation = null;
+    public PickupType currentType;
 
     public override void ReceiveInteraction(Player thisActor)
     {
         if (!isBeingCarried)
         {
-            if (isStored)
+            if (currentType == PickupType.FishBox)
             {
-                storedLocation.RemoveFishBox();
-                storedLocation = null;
-                isStored = false;
+                if (isStored)
+                {
+                    storedLocation.RemoveFishBox();
+                    storedLocation = null;
+                    isStored = false;
+                }
+                transform.SetParent(thisActor.holdPoint, true);
+                transform.localPosition = Vector3.zero;
+                isBeingCarried = true;
+                thisActor.carryingSomething = true;
             }
-            player = thisActor as Player; //TODO: Probably remove Actor base class b/c superfluous.
-            transform.SetParent(player.holdPoint, true);
-            transform.localPosition = Vector3.zero;
-            isBeingCarried = true;
-            player.carryingSomething = true;
+            else if (currentType == PickupType.Monkey)
+            {
+                transform.SetParent(thisActor.holdPoint, true);
+                transform.localPosition = Vector3.zero;
+                isBeingCarried = true;
+                thisActor.carryingSomething = true;
+                var monkey = GetComponent<Monkey>();
+                monkey.stateMachine.currentState.ExitState();
+                monkey.stateMachine.currentState = new PickedUpState(monkey);
+                monkey.stateMachine.currentState.EnterState();
+            }
+            
         }
-        else if (isBeingCarried && player.carryingSomething)
+        else if (isBeingCarried && thisActor.carryingSomething)
         {
-            Drop(thisActor);
+            if (currentType == PickupType.FishBox)
+            {
+                Debug.Log("Dropping FishBox");
+                DropFishBox(thisActor);
+            }
+            if (currentType == PickupType.Monkey)
+            {
+                Debug.Log("Dropping Monkey");
+                DropMonkey(thisActor);
+            }
         }
     }
 
-    private void Drop(Player thisActor)
+    private void DropFishBox(Player thisActor)
     {
         bool storageAvailable = false;
         Collider foundCollider = null;
@@ -54,23 +83,52 @@ public class Pickup : BaseInteractionComponent
             storageSlot.AddFishBox(GetComponent<FishBox>());
             storedLocation = storageSlot;
 
-            player.carryingSomething = false;
+            thisActor.carryingSomething = false;
             isBeingCarried = false;
             isStored = true;
         }
         else
         {
             LayerMask layerMask0 = LayerMask.GetMask("Deck");
-            // Still haven't figured out how to use these outside of an if-statement
             Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, layerMask0);
 
             var temp = transform.rotation;
             transform.SetParent(thisActor.transform.parent, true);
             transform.SetPositionAndRotation(hit.point, temp);
 
-            player.carryingSomething = false;
+            thisActor.carryingSomething = false;
             isBeingCarried = false;
         }
+    }
+
+    private void DropMonkey(Player thisActor)
+    {
+        var monkey = GetComponent<Monkey>();
+
+        //LayerMask layerMask0 = LayerMask.GetMask("Water");
+        //if (Physics.Raycast(transform.position + Vector3.forward, Vector3.down, out RaycastHit hitWater, Mathf.Infinity, layerMask0))
+        //{
+        //    Debug.Log("Hit Water");
+        //    monkey.stateMachine.currentState.ExitState();
+        //    monkey.stateMachine.currentState = new IdleState(monkey);
+        //    monkey.stateMachine.currentState.EnterState();
+        //    return;
+        //}
+
+        LayerMask layerMask1 = LayerMask.GetMask("Deck");
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitDeck, Mathf.Infinity, layerMask1);
+
+        Debug.Log("Hit Deck");
+        var temp = transform.rotation;
+        transform.SetParent(thisActor.transform.parent, true);
+        transform.SetPositionAndRotation(hitDeck.point, temp);
+
+        monkey.stateMachine.currentState.ExitState();
+        monkey.stateMachine.currentState = new IdleState(monkey);
+        monkey.stateMachine.currentState.EnterState();
+
+        thisActor.carryingSomething = false;
+        isBeingCarried = false;
     }
 
     //Stulen från https://forum.unity.com/threads/clean-est-way-to-find-nearest-object-of-many-c.44315/ post #4
