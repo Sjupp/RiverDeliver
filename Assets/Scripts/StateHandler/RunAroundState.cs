@@ -48,11 +48,14 @@ public class RunAroundState : MonkeyState
         waypointTimer -= time;
         if (waypointTimer <= 0)
         {
-            if (!actor.hasBox)
-            {
-                waypointPos = Waypoints.INSTANCE.GetRandomWaypoint();
-            }
+            waypointPos = Waypoints.INSTANCE.GetRandomWaypoint();
             waypointTimer = waypointTimerCooldown;
+
+            if (Waypoints.INSTANCE.GetAvailableFishBox() != Vector3.zero && !actor.hasBox)
+            {
+                Debug.Log("Monkey detected available box");
+                return new ChaseBoxState(actor);
+            }
         }
 
         actorPos = actor.transform.position;
@@ -62,12 +65,6 @@ public class RunAroundState : MonkeyState
 
         //viewAngle = Mathf.LerpAngle(viewAngle, Vector3.Angle(actorPos, waypointPos), 100);
         //actor.transform.rotation = Quaternion.AngleAxis(viewAngle, Vector3.up);
-
-        if (Waypoints.INSTANCE.GetAvailableFishBox() != Vector3.zero)
-        {
-            Debug.Log("Reached a box");
-            return new ChaseBoxState(actor);
-        }
 
         return null;
     }

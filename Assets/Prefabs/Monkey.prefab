@@ -1265,7 +1265,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7392680150686069109}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: afd93b6351e89004bb8d11567b2a0ef0, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -1301,6 +1301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionComponent: {fileID: 3732666992688338525}
+  hasBox: 0
 --- !u!114 &3732666992688338525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1316,6 +1317,7 @@ MonoBehaviour:
   canBeStored: 0
   isBeingCarried: 0
   isStored: 0
+  storedLocation: {fileID: 0}
   currentType: 1
 --- !u!1 &7524846963637172653
 GameObject:

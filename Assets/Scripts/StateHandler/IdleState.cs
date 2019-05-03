@@ -15,13 +15,11 @@ public class IdleState : MonkeyState
 
     public override void EnterState()
     {
-        Debug.Log("Enter Idle");
         //Animator Play(JumpIn);
     }
 
     public override void ExitState()
     {
-        Debug.Log("Exit Idle");
     }
 
     public override MonkeyState ReceiveMessage(Messages message)

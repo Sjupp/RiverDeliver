@@ -15,12 +15,10 @@ public class JumpInState : MonkeyState
 
     public override void EnterState()
     {
-        Debug.Log("Enter JumpIn");
     }
 
     public override void ExitState()
     {
-        Debug.Log("Exit JumpIn");
     }
 
     public override MonkeyState ReceiveMessage(Messages message)

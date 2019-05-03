@@ -49,7 +49,7 @@ public class Waypoints : MonoBehaviour
                 return Vector3.zero;
 
             var pickUp = fishBoxPickups[i];
-            if (pickUp.isStored && !pickUp.isBeingCarried)
+            if (pickUp.isStored && !pickUp.isBeingCarried && !pickUp.storedLocation.attachedToExtractor)
                 availableBoxes.Add(pickUp.transform.position);
         }
         if (availableBoxes.Count == 0)

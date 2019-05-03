@@ -105,20 +105,19 @@ public class Pickup : BaseInteractionComponent
     {
         var monkey = GetComponent<Monkey>();
 
-        //LayerMask layerMask0 = LayerMask.GetMask("Water");
+        //LayerMask layerMask0 = LayerMask.GetMask(new string[] { "Water", "Deck"});
         //if (Physics.Raycast(transform.position + Vector3.forward, Vector3.down, out RaycastHit hitWater, Mathf.Infinity, layerMask0))
         //{
-        //    Debug.Log("Hit Water");
-        //    monkey.stateMachine.currentState.ExitState();
-        //    monkey.stateMachine.currentState = new IdleState(monkey);
-        //    monkey.stateMachine.currentState.EnterState();
+        //    if (hitWater.collider.gameObject.layer == LayerMask.GetMask("Water"))
+        //    Destroy(monkey.gameObject);
+        //    thisActor.carryingSomething = false;
         //    return;
         //}
 
-        LayerMask layerMask1 = LayerMask.GetMask("Deck");
+        //LayerMask layerMask1 = LayerMask.GetMask("Deck");
+        LayerMask layerMask1 = LayerMask.GetMask(new string[] { "Water", "Deck" });
         Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitDeck, Mathf.Infinity, layerMask1);
 
-        Debug.Log("Hit Deck");
         var temp = transform.rotation;
         transform.SetParent(thisActor.transform.parent, true);
         transform.SetPositionAndRotation(hitDeck.point, temp);
@@ -129,6 +128,12 @@ public class Pickup : BaseInteractionComponent
 
         thisActor.carryingSomething = false;
         isBeingCarried = false;
+
+        Debug.Log(hitDeck.collider.gameObject.layer);
+
+        if (hitDeck.collider.gameObject.layer == 4)
+            BoatManager.INSTANCE.monkeys.Remove(monkey.gameObject);
+            Destroy(monkey.gameObject);
     }
 
     //Stulen från https://forum.unity.com/threads/clean-est-way-to-find-nearest-object-of-many-c.44315/ post #4

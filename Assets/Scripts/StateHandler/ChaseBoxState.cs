@@ -6,8 +6,7 @@ public class ChaseBoxState : MonkeyState
 {
     private Monkey actor;
     private Vector3 chaseTarget;
-
-    private float viewAngle;
+    //private float viewAngle; Tried to lerp monkey direction, but turned out to be troublesome.
     private float lerpStrength;
     private Vector3 actorPos;
     private Rigidbody rb;
@@ -15,6 +14,8 @@ public class ChaseBoxState : MonkeyState
     public ChaseBoxState(Monkey _actor)
     {
         actor = _actor;
+        chaseTarget = Vector3.zero;
+
         lerpStrength = .7f;
         actorPos = actor.transform.position;
         rb = actor.GetComponent<Rigidbody>();
@@ -22,6 +23,7 @@ public class ChaseBoxState : MonkeyState
 
     public override void EnterState()
     {
+        Debug.Log("Monkey chasing a box");
         chaseTarget = Waypoints.INSTANCE.GetAvailableFishBox();
     }
 
@@ -42,6 +44,7 @@ public class ChaseBoxState : MonkeyState
         actor.transform.LookAt(chaseTarget);
         if (Vector3.Distance(actor.transform.position, chaseTarget) < 2.5f)
         {
+            Debug.Log("Monkey tried picking up box and returning to run around state");
             CustomMonkeyPickup();
             return new RunAroundState(actor);
         }
@@ -55,13 +58,10 @@ public class ChaseBoxState : MonkeyState
         Collider[] foundInteractibles = Physics.OverlapBox(actor.transform.position, Vector3.one * 3, Quaternion.identity, layerMask);
         foreach (var item in foundInteractibles)
         {
-            Debug.Log("Found in FoundInteractibles: " + item.name);
             if (item.CompareTag("FishBox"))
             {
-                Debug.Log("Successfully compared tag with FishBox");
                 if (item.GetComponent<Pickup>().isStored)
                 {
-                    Debug.Log("Said FishBox is stored");
                     var temp = item.GetComponent<Pickup>();
                     temp.storedLocation.RemoveFishBox();
                     temp.storedLocation = null;
