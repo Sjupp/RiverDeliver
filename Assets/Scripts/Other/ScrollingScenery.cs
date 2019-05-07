@@ -32,6 +32,8 @@ public class ScrollingScenery : MonoBehaviour
         prefab.SetActive(false);
         objectPool = new List<GameObject>();
         sceneryObjectPool = new List<SceneryObject>();
+
+        SpawnStartingObjects();
     }
 
     private void Update()
@@ -54,9 +56,35 @@ public class ScrollingScenery : MonoBehaviour
         
     }
 
+    private void SpawnStartingObjects()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            SpawnSceneryObject(i);
+        }
+    }
+
     private void SpawnSceneryObject()
     {
         Vector3 newPos = new Vector3(thisPosition.x,
+                                     thisPosition.y,
+                                     thisPosition.z + Random.Range(-depthOffsetForward, depthOffsetBack));
+        if (dropViaRaycast)
+        {
+            if (Physics.Raycast(newPos, Vector3.down, out RaycastHit hit, Mathf.Infinity))
+            { }
+            newPos = hit.point - dropAmount;
+        }
+
+        GameObject go = FetchFromPool(); // Hämta ett objekt ur poolen
+        go.transform.SetPositionAndRotation(newPos, Quaternion.Euler(0, Random.Range(0, 360), 0)); // Sätt ut den där jag vill att den ska "spawna"
+        go.transform.SetParent(transform);
+        go.GetComponent<SceneryObject>().speed = speed; // Sätt objektet i rörelse. I sin egen kod: När den rört sig x långt, SetActive(false);
+    }
+
+    private void SpawnSceneryObject(float xPos)
+    {
+        Vector3 newPos = new Vector3(thisPosition.x + (xPos * 1.5f),
                                      thisPosition.y,
                                      thisPosition.z + Random.Range(-depthOffsetForward, depthOffsetBack));
         if (dropViaRaycast)

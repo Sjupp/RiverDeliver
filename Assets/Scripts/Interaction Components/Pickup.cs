@@ -129,11 +129,13 @@ public class Pickup : BaseInteractionComponent
         thisActor.carryingSomething = false;
         isBeingCarried = false;
 
-        Debug.Log(hitDeck.collider.gameObject.layer);
-
         if (hitDeck.collider.gameObject.layer == 4)
+        {
+            Debug.Log(BoatManager.INSTANCE.monkeys.Count);
             BoatManager.INSTANCE.monkeys.Remove(monkey.gameObject);
             Destroy(monkey.gameObject);
+            Debug.Log(BoatManager.INSTANCE.monkeys.Count);
+        }
     }
 
     //Stulen från https://forum.unity.com/threads/clean-est-way-to-find-nearest-object-of-many-c.44315/ post #4
